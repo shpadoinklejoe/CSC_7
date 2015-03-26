@@ -15,7 +15,6 @@ enum crdCardType {Visa, Mastercard, Amex, Discover, EITHER};
 
 //Function Prototypes
 void genCC(vector<int>&v, crdCardType);
-int luhnSum(const vector<int>&v);
 int checkDigit(const vector<int>& v);
 bool validCC(const vector<int>& v);
 void coutNum(const vector<int>&v);
@@ -33,9 +32,19 @@ int main(int argc, char** argv)
    
     cout << "Enter which conglomerate you want a credit card number from\n"
             "Visa, Mastercard, Discover, Amex, or EITHER(if it doesn't matter which company): ";
+    
     cin >> conglomerate;
     
-    switch( tolower(conglomerate[0]) ){
+    // error checking
+    char c = tolower(conglomerate[0]);
+
+    while(c!='v' && c!='m' && c!='a' && c!='e' && c!='d'){
+        cout << "\nNot a valid conglomerate!\nEnter a valid company: ";
+        cin >> conglomerate;
+        c = tolower(conglomerate[0]);
+    }
+ 
+    switch( c ){
         case 'v':
             ccType = Visa;
             break;    
@@ -45,19 +54,18 @@ int main(int argc, char** argv)
         case 'a':
             ccType = Amex;
             break;
+        case 'd':
+             ccType = Discover;
+        break;
         case 'e':
             ccType = EITHER;
             break;
-        default:
-            cout << "Not a valid conglomerate\n";
     }
-    
-    cout << ccType << endl;
     
     genCC(crdCard, ccType);
     
     //Output credit card
-    cout<<"Here's your new Credit Card number: \n";
+    cout<<"\nHere's your new Credit Card number: \n";
     coutNum(crdCard);
     
     
@@ -79,13 +87,11 @@ int main(int argc, char** argv)
 /////////////////////
 
 // fill Credit Card with numbers
-void genCC(vector<int>&v, crdCardType)
+void genCC(vector<int>&v, crdCardType c)
 {
-    cout << "entering function ";
     // VISA
-    if (Visa)
+    if (c==Visa)
     {
-        cout << "visa ";
         int size = rand()%2;
         // length of CC can be 13digits or 16digits
         if (size==0)
@@ -104,9 +110,8 @@ void genCC(vector<int>&v, crdCardType)
         v.push_back(checkDigit(v));
     }
     //MasterCard
-    else if (Mastercard)
+    else if (c==Mastercard)
     {
-        cout << "mastercard ";
         for(int i=0; i<15; i++)
         {
                 v.push_back(rand()%10);
@@ -114,21 +119,17 @@ void genCC(vector<int>&v, crdCardType)
         v.push_back(checkDigit(v));
     }
     //American Express
-    else if (Amex)
+    else if (c==Amex)
     {
-        cout << "amex ";
         for(int i=0; i<14; i++)
         {
                 v.push_back(rand()%10);
         }
-        cout << "test ";
         v.push_back(checkDigit(v));
-        cout << "test ";
     }
     //Discover Card
-    else if (Discover)
+    else if (c==Discover)
     {
-        cout << "discover ";
         for(int i=0; i<15; i++)
         {
                 v.push_back(rand()%10);
@@ -136,29 +137,26 @@ void genCC(vector<int>&v, crdCardType)
         v.push_back(checkDigit(v));
     }
     // Recurse if type not specified
-    else if (EITHER)
+    else if (c==EITHER)
     {
-        int rand = rand()%4;
-        if(rand == 0)
+        int r = rand()%4;
+        if(r == 0)
         {
                 genCC(v, Visa);
         }
-        else if(rand == 1)
+        else if(r == 1)
         {
                 genCC(v, Mastercard);
         }
-        else if(rand == 2)
+        else if(r == 2)
         {
                 genCC(v, Amex);
         }
-        else if(rand == 3)
+        else if(r == 3)
         {
                 genCC(v, Discover);
         }
     }
-    
-    cout << "leaving function ";
-    
 }
 
 //Output vector of integers
@@ -171,22 +169,87 @@ void coutNum(const vector<int>& v)
     cout <<"\n\n";
 }
 
-//Output vector of integers (without spaces or return statement)
+//Output vector of integers in respective CC format
 void coutCC(const vector<int>& v)
 {
-    for(int i=0; i<v.size(); i++)
+    if (v.size()==16)
     {
-        cout << v[i];
-        if( (i+1)%4==0 ){
-            cout << " ";
+        for(int i=0; i<v.size(); i++)
+        {
+            cout << v[i];
+            if( (i+1)%4==0 ){
+                cout << " ";
+            }
         }
-        
+    }
+    else if (v.size()==15)
+    {
+        for(int i=0; i<4; i++)
+        {
+            cout << v[i];
+        }
+        cout << " ";
+        for(int i=4; i<10; i++)
+        {
+            cout << v[i];
+        }
+        cout << " ";
+        for(int i=10; i<15; i++)
+        {
+            cout << v[i];
+        }
+        cout << " ";
+    }
+    else if (v.size()==13)
+    {
+        for(int i=0; i<v.size(); i++)
+        {
+            cout << v[i];
+        }
+        cout << " ";
     }
 }
 
-// does the Luhn math
-int luhnSum(const vector<int>&v)
+// calculate check digit
+int checkDigit(const vector<int>& v)
 {
+    vector<int> vLuhn( v.size() );
+    
+    // Calculate Luhn credit card number
+    for(int i=0; i<v.size(); i++)
+    {
+        //if odd digit multiply by 2
+        if ( i%2 == 1 ) 
+        {                                 
+            if( (v[i]*2) > 9)
+            {
+                vLuhn[i]= (v[i]*2)-9;
+            }
+            else{
+                vLuhn[i]= v[i]*2;
+            }
+        }
+        else{
+            vLuhn[i]= v[i];
+        }
+    }
+    int sum =0;
+    for(int i=0; i<vLuhn.size(); i++)
+    {
+        sum += vLuhn[i];
+    }
+    
+    sum= (sum*9)%10;
+    
+    return sum;
+    
+}
+
+
+//Test CC number
+bool validCC(const vector<int>& v)
+{
+   
     vector<int> vLuhn( v.size() );
     
     // Calculate Luhn credit card number
@@ -207,33 +270,11 @@ int luhnSum(const vector<int>&v)
             vLuhn[i]= v[i];
         }
     }
-    
     int sum =0;
     for(int i=0; i<vLuhn.size(); i++)
     {
         sum += vLuhn[i];
-    }
-    
-    return sum;
-}
-
-// calculate check digit
-int checkDigit(const vector<int>& v)
-{
-    int checkDigit= luhnSum(v);
-    
-    checkDigit= (checkDigit*9)%10;
-    
-    return checkDigit;
-    
-}
-
-
-//Test CC number
-bool validCC(const vector<int>& v)
-{
-   
-    int sum = luhnSum(v);  
+    } 
     
     if (sum%10 == 0)
     {
