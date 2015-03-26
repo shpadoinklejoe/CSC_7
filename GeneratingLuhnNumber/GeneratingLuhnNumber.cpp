@@ -90,8 +90,9 @@ void coutCC(const vector<int>& v)
     }
 }
 
-// does the Luhn math
-int luhnSum(const vector<int>&v)
+
+// calculate check digit
+int checkDigit(const vector<int>& v)
 {
     vector<int> vLuhn( v.size() );
     
@@ -99,8 +100,8 @@ int luhnSum(const vector<int>&v)
     for(int i=0; i<v.size(); i++)
     {
         //if odd digit multiply by 2
-        if ( (i%2 == 1) && (i!=v.size()-1) ) // does not double luhn number when 
-        {                                // testing luhn algorithm
+        if ( i%2 == 1 )  
+        {                              
             if( (v[i]*2) > 9)
             {
                 vLuhn[i]= (v[i]*2)-9;
@@ -120,17 +121,9 @@ int luhnSum(const vector<int>&v)
         sum += vLuhn[i];
     }
     
+    sum = (sum*9)%10;
+    
     return sum;
-}
-
-// calculate check digit
-int checkDigit(const vector<int>& v)
-{
-    int checkDigit= luhnSum(v);
-    
-    checkDigit= (checkDigit*9)%10;
-    
-    return checkDigit;
     
 }
 
@@ -138,8 +131,32 @@ int checkDigit(const vector<int>& v)
 //Test CC number
 bool luhnTest(const vector<int>& v)
 {
-   
-    int sum = luhnSum(v);  
+    vector<int> vLuhn( v.size() );
+    
+    // Calculate Luhn credit card number
+    for(int i=0; i<v.size(); i++)
+    {
+        //if odd digit multiply by 2
+        if ( (i%2 == 1) && (i!=v.size()-1) ) // does not double luhn number when 
+        {                                    // testing luhn algorithm
+            if( (v[i]*2) > 9)
+            {
+                vLuhn[i]= (v[i]*2)-9;
+            }
+            else{
+                vLuhn[i]= v[i]*2;
+            }
+        }
+        else{
+            vLuhn[i]= v[i];
+        }
+    }
+    
+    int sum =0;
+    for(int i=0; i<vLuhn.size(); i++)
+    {
+        sum += vLuhn[i];
+    }
     
     if (sum%10 == 0)
     {
