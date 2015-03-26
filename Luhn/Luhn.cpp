@@ -16,6 +16,7 @@ enum crdCardType {Visa, Mastercard, Amex, Discover, EITHER};
 //Function Prototypes
 void genCC(vector<int>&v, crdCardType);
 int checkDigit(const vector<int>& v);
+void flipDig(vector<int>& v);
 bool validCC(const vector<int>& v);
 void coutNum(const vector<int>&v);
 void coutCC(const vector<int>&v);
@@ -68,6 +69,11 @@ int main(int argc, char** argv)
     cout<<"\nHere's your new Credit Card number: \n";
     coutNum(crdCard);
     
+    //Impliment Flip Digit Function
+    cout<< "Now let's randomly replace a digit with a random number: \n";
+    flipDig(crdCard);
+    coutNum(crdCard);
+    
     
     //Test credit card number using Luhn method
     coutCC(crdCard);
@@ -85,6 +91,20 @@ int main(int argc, char** argv)
     return 0;
 }
 /////////////////////
+
+// randomly replace a CC digit with a random number
+void flipDig(vector<int>& v)
+{
+    int flipDig = rand()%v.size();
+    int randDig = rand()%10;
+    
+
+    v[flipDig] = randDig;
+    
+}
+
+
+
 
 // fill Credit Card with numbers
 void genCC(vector<int>&v, crdCardType c)
