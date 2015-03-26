@@ -69,7 +69,17 @@ int main(int argc, char** argv)
     cout<<"\nHere's your new Credit Card number: \n";
     coutNum(crdCard);
     
-    //Impliment Flip Digit Function
+    //Test credit card number using Luhn method
+    coutCC(crdCard);
+    if (validCC(crdCard))
+    {
+        cout << "is a valid credit card number!\n\n";
+    }
+    else{
+        cout << "is NOT a valid credit card number :(\n\n";
+    }
+    
+    //Implement Flip Digit Function
     cout<< "Now let's randomly replace a digit with a random number: \n";
     flipDig(crdCard);
     coutNum(crdCard);
@@ -86,6 +96,32 @@ int main(int argc, char** argv)
     }
     
     
+    // Test 10,000
+    cout<< "OK now i will create & test 10,000 credit card numbers...\n";
+    int valid =0;
+    int nonValid= 0;
+    
+    for (int i=0; i<10000; i++)
+    {
+        vector<int> crdCardTest;
+        crdCardType ccTypeTest = EITHER;
+        genCC(crdCardTest, ccTypeTest);
+        //flipDig(crdCardTest);
+        //coutCC(crdCardTest);
+        //cout << endl;
+        
+        if (validCC(crdCardTest))
+        {
+            valid++;
+        }
+        else{
+            nonValid++;
+        }
+        
+    }
+    
+    cout << "There were "<< nonValid<< " NONvalid credit card numbers,\n";
+    cout << "and there were " << valid << " valid credit card numbers\n";
     
     //Exit Stage Right
     return 0;
@@ -96,14 +132,16 @@ int main(int argc, char** argv)
 void flipDig(vector<int>& v)
 {
     int flipDig = rand()%v.size();
-    int randDig = rand()%10;
     
+    // ensures returning a bad CC number
+    int randDig;
+    do{
+    randDig = rand()%10;
+    }
+    while(randDig==v[flipDig]);
 
-    v[flipDig] = randDig;
-    
+    v[flipDig] = randDig;   
 }
-
-
 
 
 // fill Credit Card with numbers
