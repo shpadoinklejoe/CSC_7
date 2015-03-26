@@ -9,15 +9,17 @@
 
 using namespace std;
 
-//Global Constants
+//Global Constants//
+//Creating data type 
+enum crdCardType {Visa, Mastercard, Amex, Discover, EITHER};
 
 //Function Prototypes
-void prpLuhn(vector<int>&v);
-void coutNum(const vector<int>&v);
-void coutCC(const vector<int>&v);
+void genCC(vector<int>&v, crdCardType);
 int luhnSum(const vector<int>&v);
 int checkDigit(const vector<int>& v);
-bool luhnTest(const vector<int>& v);
+bool validCC(const vector<int>& v);
+void coutNum(const vector<int>&v);
+void coutCC(const vector<int>&v);
 
 int main(int argc, char** argv) 
 {
@@ -25,24 +27,43 @@ int main(int argc, char** argv)
     srand(time(0));
     
     //Prepare for Luhn encoding
-    const int CCSIZE= 15; // initial credit card size (-1 digit of actual size)
-    vector<int> crdCard(CCSIZE);
-    prpLuhn(crdCard);
+    vector<int> crdCard;
+    crdCardType ccType = EITHER;
+    string conglomerate;
+   
+    cout << "Enter which conglomerate you want a credit card number from\n"
+            "Visa, Mastercard, Discover, Amex, or EITHER(if it doesn't matter which company): ";
+    cin >> conglomerate;
     
-    //Output the preLuhn credit card
-    cout<<"A random number created in Prep for Luhn Digit: \n";
-    coutNum(crdCard);
+    switch( tolower(conglomerate[0]) ){
+        case 'v':
+            ccType = Visa;
+            break;    
+        case 'm':
+            ccType = Mastercard;
+            break;
+        case 'a':
+            ccType = Amex;
+            break;
+        case 'e':
+            ccType = EITHER;
+            break;
+        default:
+            cout << "Not a valid conglomerate\n";
+    }
     
-    //Now create a function that fills the last digit
-    //using the Luhn Algorithm
-    cout<<"The random number with Luhn Encoding, Output Here!\n";
-    crdCard.push_back(checkDigit(crdCard));
+    cout << ccType << endl;
+    
+    genCC(crdCard, ccType);
+    
+    //Output credit card
+    cout<<"Here's your new Credit Card number: \n";
     coutNum(crdCard);
     
     
     //Test credit card number using Luhn method
     coutCC(crdCard);
-    if (luhnTest(crdCard))
+    if (validCC(crdCard))
     {
         cout << "is a valid credit card number!\n\n";
     }
@@ -55,16 +76,89 @@ int main(int argc, char** argv)
     //Exit Stage Right
     return 0;
 }
+/////////////////////
 
-//Fill credit card with numbers
-void prpLuhn(vector<int>& v)
+// fill Credit Card with numbers
+void genCC(vector<int>&v, crdCardType)
 {
-    //Create a random cc in prep for Luhn checksum
-    for(int i=0; i<v.size(); i++)
+    cout << "entering function ";
+    // VISA
+    if (Visa)
     {
-        v[i]=rand()%10;
+        cout << "visa ";
+        int size = rand()%2;
+        // length of CC can be 13digits or 16digits
+        if (size==0)
+        {
+            size=12;
+        }
+        else if (size==1)
+        {
+            size=15;
+        }
+        
+        for(int i=0; i<size; i++) 
+        {
+                v.push_back(rand()%10);
+        }
+        v.push_back(checkDigit(v));
     }
-
+    //MasterCard
+    else if (Mastercard)
+    {
+        cout << "mastercard ";
+        for(int i=0; i<15; i++)
+        {
+                v.push_back(rand()%10);
+        }
+        v.push_back(checkDigit(v));
+    }
+    //American Express
+    else if (Amex)
+    {
+        cout << "amex ";
+        for(int i=0; i<14; i++)
+        {
+                v.push_back(rand()%10);
+        }
+        cout << "test ";
+        v.push_back(checkDigit(v));
+        cout << "test ";
+    }
+    //Discover Card
+    else if (Discover)
+    {
+        cout << "discover ";
+        for(int i=0; i<15; i++)
+        {
+                v.push_back(rand()%10);
+        }
+        v.push_back(checkDigit(v));
+    }
+    // Recurse if type not specified
+    else if (EITHER)
+    {
+        int rand = rand()%4;
+        if(rand == 0)
+        {
+                genCC(v, Visa);
+        }
+        else if(rand == 1)
+        {
+                genCC(v, Mastercard);
+        }
+        else if(rand == 2)
+        {
+                genCC(v, Amex);
+        }
+        else if(rand == 3)
+        {
+                genCC(v, Discover);
+        }
+    }
+    
+    cout << "leaving function ";
+    
 }
 
 //Output vector of integers
@@ -100,7 +194,7 @@ int luhnSum(const vector<int>&v)
     {
         //if odd digit multiply by 2
         if ( (i%2 == 1) && (i!=v.size()-1) ) // does not double luhn number when 
-        {                                // testing luhn algorithm
+        {                                    // testing luhn algorithm
             if( (v[i]*2) > 9)
             {
                 vLuhn[i]= (v[i]*2)-9;
@@ -136,7 +230,7 @@ int checkDigit(const vector<int>& v)
 
 
 //Test CC number
-bool luhnTest(const vector<int>& v)
+bool validCC(const vector<int>& v)
 {
    
     int sum = luhnSum(v);  
