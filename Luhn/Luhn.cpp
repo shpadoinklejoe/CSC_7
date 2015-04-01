@@ -18,6 +18,7 @@ void genCC(vector<int>&v, crdCardType);
 int checkDigit(const vector<int>& v);
 void flipDig(vector<int>& v);
 bool validCC(const vector<int>& v);
+void isValidCC(const vector<int>& v, crdCardType);
 void coutNum(const vector<int>&v);
 void coutCC(const vector<int>&v);
 
@@ -59,7 +60,23 @@ int main(int argc, char** argv)
              ccType = Discover;
         break;
         case 'e':
-            ccType = EITHER;
+            int r = rand()%4;
+            if(r == 0)
+            {
+                ccType = Visa;
+            }
+            else if(r == 1)
+            {
+                ccType = Mastercard;
+            }
+            else if(r == 2)
+            {
+                ccType = Amex;
+            }
+            else if(r == 3)
+            {
+                ccType = Discover;
+            }
             break;
     }
     
@@ -71,13 +88,7 @@ int main(int argc, char** argv)
     
     //Test credit card number using Luhn method
     coutCC(crdCard);
-    if (validCC(crdCard))
-    {
-        cout << "is a valid credit card number!\n\n";
-    }
-    else{
-        cout << "is NOT a valid credit card number :(\n\n";
-    }
+    isValidCC(crdCard, ccType);
     
     //Implement Flip Digit Function
     cout<< "Now let's randomly replace a digit with a random number: \n";
@@ -87,13 +98,7 @@ int main(int argc, char** argv)
     
     //Test credit card number using Luhn method
     coutCC(crdCard);
-    if (validCC(crdCard))
-    {
-        cout << "is a valid credit card number!\n\n";
-    }
-    else{
-        cout << "is NOT a valid credit card number :(\n\n";
-    }
+    isValidCC(crdCard, ccType);
     
     
     // Test 10,000
@@ -147,52 +152,87 @@ void flipDig(vector<int>& v)
 // fill Credit Card with numbers
 void genCC(vector<int>&v, crdCardType c)
 {
-    // VISA
+    // VISA (13 or 16 digits)
     if (c==Visa)
     {
         int size = rand()%2;
         // length of CC can be 13digits or 16digits
         if (size==0)
         {
-            size=12;
+            size=11;
         }
         else if (size==1)
         {
-            size=15;
+            size=14;
         }
         
+        v.push_back(4);
         for(int i=0; i<size; i++) 
         {
                 v.push_back(rand()%10);
         }
         v.push_back(checkDigit(v));
+
     }
-    //MasterCard
+    //MasterCard (16 digits)
     else if (c==Mastercard)
     {
-        for(int i=0; i<15; i++)
+        v.push_back(5);
+        v.push_back( (rand()%5)+1 );
+        for(int i=0; i<13; i++)
         {
                 v.push_back(rand()%10);
         }
         v.push_back(checkDigit(v));
+
     }
-    //American Express
+    //American Express (15 digits)
     else if (c==Amex)
     {
-        for(int i=0; i<14; i++)
+        v.push_back(3);
+        int iin = rand()%2;
+        if(iin==0)
+        {
+            v.push_back(4);
+        }
+        else if(iin==1)
+        {
+            v.push_back(7);
+        }
+        for(int i=0; i<12; i++)
         {
                 v.push_back(rand()%10);
         }
         v.push_back(checkDigit(v));
+
     }
-    //Discover Card
+    //Discover Card (16 digits)
     else if (c==Discover)
     {
-        for(int i=0; i<15; i++)
+        int iin = rand()%2;
+        if(iin==0)
         {
+            v.push_back(6);
+            v.push_back(0);
+            v.push_back(5);
+            v.push_back(5);
+            for(int i=0; i<11; i++)
+            {
                 v.push_back(rand()%10);
+            }
         }
+        else if(iin==1)
+        {
+            v.push_back(6);
+            v.push_back(5);
+            for(int i=0; i<13; i++)
+            {
+                v.push_back(rand()%10);
+            }
+        }
+             
         v.push_back(checkDigit(v));
+  
     }
     // Recurse if type not specified
     else if (c==EITHER)
@@ -215,6 +255,7 @@ void genCC(vector<int>&v, crdCardType c)
                 genCC(v, Discover);
         }
     }
+   
 }
 
 //Output vector of integers
@@ -307,7 +348,6 @@ int checkDigit(const vector<int>& v)
 //Test CC number
 bool validCC(const vector<int>& v)
 {
-   
     vector<int> vLuhn( v.size() );
     
     // Calculate Luhn credit card number
@@ -341,5 +381,33 @@ bool validCC(const vector<int>& v)
     else
     {
         return false;
+    }
+}
+
+// function that uses bool value to cout result
+void isValidCC(const vector<int>& v, crdCardType c)
+{
+    string s;
+    switch( c ){
+        case 0:
+            s = "VISA";
+            break;    
+        case 1:
+            s = "MASTERCARD";
+            break;
+        case 2:
+            s = "AMERICAN EXPRESS";
+            break;
+        case 3:
+            s = "DISCOVER";
+            break;
+    }
+    
+    if ( validCC(v) )
+    {
+        cout << "IS a valid "<< s << " credit card number!\n\n";
+    }
+    else{
+        cout << "is NOT a valid credit card number :(\n\n";
     }
 }
