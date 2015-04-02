@@ -1,5 +1,5 @@
 /* 
- * Due Monday, March 30
+ * Due Monday, April 06
  */
 
 //System Libraries
@@ -16,9 +16,11 @@ enum crdCardType {Visa, Mastercard, Amex, Discover, EITHER};
 //Function Prototypes
 void genCC(vector<int>&v, crdCardType);
 int checkDigit(const vector<int>& v);
-void flipDig(vector<int>& v);
+void transpose(vector<int>& v);
+void flip2dig(vector<int>& v);
 bool validCC(const vector<int>& v);
-void isValidCC(const vector<int>& v, crdCardType);
+void isValidCC(const vector<int>& v);
+void isValidCCtype(const vector<int>& v, crdCardType);
 void coutNum(const vector<int>&v);
 void coutCC(const vector<int>&v);
 
@@ -29,55 +31,23 @@ int main(int argc, char** argv)
     
     //Prepare for Luhn encoding
     vector<int> crdCard;
-    crdCardType ccType = EITHER;
-    string conglomerate;
+    crdCardType ccType = EITHER; //initializing enum
    
-    cout << "Enter which conglomerate you want a credit card number from\n"
-            "Visa, Mastercard, Discover, Amex, or EITHER(if it doesn't matter which company): ";
-    
-    cin >> conglomerate;
-    
-    // error checking
-    char c = tolower(conglomerate[0]);
-
-    while(c!='v' && c!='m' && c!='a' && c!='e' && c!='d'){
-        cout << "\nNot a valid conglomerate!\nEnter a valid company: ";
-        cin >> conglomerate;
-        c = tolower(conglomerate[0]);
-    }
+    int randomCC = rand()%4;
  
-    switch( c ){
-        case 'v':
+    switch( randomCC ){
+        case 0:
             ccType = Visa;
             break;    
-        case 'm':
+        case 1:
             ccType = Mastercard;
             break;
-        case 'a':
+        case 2:
             ccType = Amex;
             break;
-        case 'd':
+        case 3:
              ccType = Discover;
-        break;
-        case 'e':
-            int r = rand()%4;
-            if(r == 0)
-            {
-                ccType = Visa;
-            }
-            else if(r == 1)
-            {
-                ccType = Mastercard;
-            }
-            else if(r == 2)
-            {
-                ccType = Amex;
-            }
-            else if(r == 3)
-            {
-                ccType = Discover;
-            }
-            break;
+             break;
     }
     
     genCC(crdCard, ccType);
@@ -85,48 +55,77 @@ int main(int argc, char** argv)
     //Output credit card
     cout<<"\nHere's your new Credit Card number: \n";
     coutNum(crdCard);
-    
     //Test credit card number using Luhn method
     coutCC(crdCard);
-    isValidCC(crdCard, ccType);
-    
-    //Implement Flip Digit Function
-    cout<< "Now let's randomly replace a digit with a random number: \n";
-    flipDig(crdCard);
-    coutNum(crdCard);
+    isValidCCtype(crdCard, ccType);
     
     
-    //Test credit card number using Luhn method
+    //Implement Swap Digit Function
+    cout<< "Now let's randomly swap 2 of the numbers in the credit card: \n";
+    transpose(crdCard);
+    //Test
     coutCC(crdCard);
-    isValidCC(crdCard, ccType);
+    isValidCC(crdCard);
     
     
-    // Test 10,000
-    cout<< "OK now i will create & test 10,000 credit card numbers...\n";
-    int valid =0;
-    int nonValid= 0;
+    //Implement 2 Flip function
+    cout<< "Now let's randomly replace 2 digits with random numbers: \n";
+    flip2dig(crdCard);
+    //Test
+    coutCC(crdCard);
+    isValidCC(crdCard);
+    
+    
+    // Test TRANSPOSE 10,000 times
+    cout<< "OK now i will create, transpose, & test 10,000 credit card numbers...\n";
+    int validTrans =0;
+    int nonValidTrans= 0;
     
     for (int i=0; i<10000; i++)
     {
-        vector<int> crdCardTest;
-        crdCardType ccTypeTest = EITHER;
-        genCC(crdCardTest, ccTypeTest);
-        //flipDig(crdCardTest);
-        //coutCC(crdCardTest);
-        //cout << endl;
+        vector<int> crdCardTranspose;
+        crdCardType ccTransTest = EITHER;
+        genCC(crdCardTranspose, ccTransTest);
         
-        if (validCC(crdCardTest))
+        transpose(crdCardTranspose);
+        
+        if (validCC(crdCardTranspose))
         {
-            valid++;
+            validTrans++;
         }
         else{
-            nonValid++;
+            nonValidTrans++;
         }
-        
     }
+    cout << "There were "<< nonValidTrans<< " NON-valid credit card numbers,\n";
+    cout << "and there were " << validTrans << " valid credit card numbers\n\n";
     
-    cout << "There were "<< nonValid<< " NONvalid credit card numbers,\n";
-    cout << "and there were " << valid << " valid credit card numbers\n";
+    
+    // Test FLIPPING 10,000 times
+    cout<< "For my next analysis i will create, flip, & test 10,000 credit card numbers...\n";
+    int validFlip =0;
+    int nonValidFlip= 0;
+    
+    for (int i=0; i<10000; i++)
+    {
+        vector<int> crdCardFlip;
+        crdCardType ccFlipTest = EITHER;
+        genCC(crdCardFlip, ccFlipTest);
+        
+        transpose(crdCardFlip);
+        
+        if (validCC(crdCardFlip))
+        {
+            validFlip++;
+        }
+        else{
+            nonValidFlip++;
+        }
+    }
+    cout << "There were "<< nonValidFlip<< " NON-valid credit card numbers,\n";
+    cout << "and there were " << validFlip << " valid credit card numbers\n";
+    
+    
     
     //Exit Stage Right
     return 0;
@@ -369,7 +368,7 @@ bool validCC(const vector<int>& v)
 }
 
 // function that uses bool value to cout result
-void isValidCC(const vector<int>& v, crdCardType c)
+void isValidCCtype(const vector<int>& v, crdCardType c)
 {
     string s;
     switch( c ){
@@ -396,18 +395,57 @@ void isValidCC(const vector<int>& v, crdCardType c)
     }
 }
 
-// randomly replace a CC digit with a random number
-void flipDig(vector<int>& v)
+
+// function that uses bool value to cout result
+void isValidCC(const vector<int>& v)
+{
+    if ( validCC(v) )
+    {
+        cout << "is STILL a valid credit card number!\n\n";
+    }
+    else{
+        cout << "is NOT a valid credit card number :(\n\n";
+    }
+}
+
+// randomly swaps 2 digits of the credit card number
+void transpose(vector<int>& v)
 {
     int flipDig = rand()%v.size();
+    int flipDig2;
+    // ensures that 2 separate digits are chosen to swap
+    do{
+        flipDig2 = rand()%v.size();
+    }
+    while(flipDig==flipDig2);
     
-    // ensures returning a bad CC number
+    swap(v[flipDig],v[flipDig2]);   
+}
+
+// randomly replace 2 CC digits with 2 random numbers
+void flip2dig(vector<int>& v)
+{
+    int flipDig = rand()%v.size();
+    int flipDig2;
+    // ensures that 2 separate digits are chosen to flip
+    do{
+        flipDig2 = rand()%v.size();
+    }
+    while(flipDig==flipDig2);
+    
+    // ensures that flipDigits are replaced by different numbers
     int randDig;
     do{
     randDig = rand()%10;
     }
     while(randDig==v[flipDig]);
+  
+    int randDig2;
+    do{
+    randDig2 = rand()%10;
+    }
+    while(randDig2==v[flipDig2]);
 
-    v[flipDig] = randDig;   
+    v[flipDig] = randDig;
+    v[flipDig2] = randDig2; 
 }
-
