@@ -1,32 +1,19 @@
-/*
- **************************************************************************
- *                                                                        *
- *           General Purpose Hash Function Algorithms Test                *
- *                                                                        *
- * Author: Arash Partow - 2002                                            *
- * URL: http://www.partow.net                                             *
- * URL: http://www.partow.net/programming/hashfunctions/index.html        *
- *                                                                        *
- * Copyright notice:                                                      *
- * Free use of the General Purpose Hash Function Algorithms Library is    *
- * permitted under the guidelines and in accordance with the most current *
- * version of the Common Public License.                                  *
- * http://www.opensource.org/licenses/cpl1.0.php                          *
- *                                                                        *
- **************************************************************************
-*/
-
-
 #include <iostream>
 #include <string>
 #include "GeneralHashFunctions.h"
 
 int main(int argc, char* argv[])
 {
-   std::string key = "abcdefghijklmnopqrstuvwxyz1234567890";
+   std::string key = "Then out spake brave Horatius,"
+                "\n     The Captain of the Gate:"
+                "\n     To every man upon this earth"
+                "\n     Death cometh soon or late."
+                "\n     And how can man die better"
+                "\n     Than facing fearful odds,"
+                "\n     For the ashes of his fathers,"
+                "\n     And the temples of his gods.\n";
 
-   std::cout << "General Purpose Hash Function Algorithms Test" << std::endl;
-   std::cout << "By Arash Partow - 2002        " << std::endl;
+   std::cout << "General Purpose Hash Function Algorithms Test\n" << std::endl;
    std::cout << "Key: "                          << key           << std::endl;
    std::cout << " 1. RS-Hash Function Value:   " << RSHash(key)   << std::endl;
    std::cout << " 2. JS-Hash Function Value:   " << JSHash(key)   << std::endl;

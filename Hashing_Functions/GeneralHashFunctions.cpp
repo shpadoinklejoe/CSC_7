@@ -173,10 +173,3 @@ unsigned int APHash(const std::string& str)
    return hash;
 }
 /* End Of AP Hash Function */
-/* 
- * File:   GeneralHashFunctions.cpp
- * Author: rcc
- * 
- * Created on April 20, 2015, 2:16 PM
- */
-
