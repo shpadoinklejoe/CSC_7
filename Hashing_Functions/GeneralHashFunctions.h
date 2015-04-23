@@ -1,24 +1,27 @@
+
 #ifndef INCLUDE_GENERALHASHFUNCTION_CPP_H
 #define INCLUDE_GENERALHASHFUNCTION_CPP_H
 
+#include <cstdlib>
+#include <iostream>
 
-#include <string>
+using namespace std;
 
 
-typedef unsigned int (*HashFunction)(const std::string&);
+typedef unsigned int (*HashFunction)(const string&);
 
 
-unsigned int RSHash  (const std::string& str);
-unsigned int JSHash  (const std::string& str);
-unsigned int PJWHash (const std::string& str);
-unsigned int ELFHash (const std::string& str);
-unsigned int BKDRHash(const std::string& str);
-unsigned int SDBMHash(const std::string& str);
-unsigned int DJBHash (const std::string& str);
-unsigned int DEKHash (const std::string& str);
-unsigned int BPHash  (const std::string& str);
-unsigned int FNVHash (const std::string& str);
-unsigned int APHash  (const std::string& str);
+unsigned int RSHash  (const string& str);
+unsigned int JSHash  (const string& str);
+unsigned int PJWHash (const string& str);
+unsigned int ELFHash (const string& str);
+unsigned int BKDRHash(const string& str);
+unsigned int SDBMHash(const string& str);
+unsigned int DJBHash (const string& str);
+unsigned int DEKHash (const string& str);
+unsigned int BPHash  (const string& str);
+unsigned int FNVHash (const string& str);
+unsigned int APHash  (const string& str);
 
 
 #endif
