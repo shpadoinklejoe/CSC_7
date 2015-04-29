@@ -38,8 +38,10 @@ void toBinary (unsigned int n)
  */
 int main(int argc, char** argv) {
     
+    srand(time(0));
     
-    unsigned int toConvert = INT_MAX + INT_MAX + 1;
+    //unsigned int toConvert = INT_MAX + INT_MAX+1;
+    int toConvert = rand()%256;
     
     cout << toConvert <<" = ";
     toBinary(toConvert);
