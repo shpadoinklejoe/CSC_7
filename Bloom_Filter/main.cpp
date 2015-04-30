@@ -35,13 +35,38 @@ void createSet(vector<string>& v, int elements)
     infile.close();
 }
 
-// bloom filter
-void bloomSearch (vector<bool>& bitMap, string searchWord, int m)
+// bloom filter given 2 hashes
+void bloomSearch2 (vector<bool>& bitMap, string searchWord, int m)
 {
     int count = 0;
     for(int i=0; i<bitMap.size(); i++)
     {
         if ( bitMap[RSHash(searchWord)%m] && bitMap[JSHash(searchWord)%m] )
+        {
+            count++;
+        }
+    }
+    
+    if (count > 0){
+        cout << "yes\n\n";
+    }
+    else {
+        cout << "no\n\n";
+    }
+}
+
+// bloom filter given 11 hashes
+void bloomSearch11 (vector<bool>& bitMap, string searchWord, int m)
+{
+    int count = 0;
+    for(int i=0; i<bitMap.size(); i++)
+    {
+        if ( bitMap[RSHash(searchWord)%m] && bitMap[JSHash(searchWord)%m] 
+                && bitMap[PJWHash(searchWord)%m] && bitMap[ELFHash(searchWord)%m]
+               && bitMap[BKDRHash(searchWord)%m] && bitMap[SDBMHash(searchWord)%m]
+                && bitMap[DJBHash(searchWord)%m] && bitMap[DEKHash(searchWord)%m]
+                && bitMap[FNVHash(searchWord)%m] && bitMap[BPHash(searchWord)%m]
+                                                 && bitMap[APHash(searchWord)%m] )
         {
             count++;
         }
@@ -80,7 +105,7 @@ int main(int argc, char* argv[])
     //createFile();
     
     // n (elements in set)
-    int elements = 50; 
+    int elements = 10; 
     vector<string> set;
     
     createSet(set, elements);
@@ -95,7 +120,6 @@ int main(int argc, char* argv[])
     int m = static_cast<int>( (k*elements)/.69 ); 
 
     // bit vector (actual Bloom Filter)
-    // k = 2
     vector<bool> bitMap (m);
     
     for(int i=0; i<set.size(); i++)
@@ -110,30 +134,64 @@ int main(int argc, char* argv[])
     
     // search for word not inside set
     searchWord = "cardiac";
-    bloomSearch(bitMap, searchWord, m);
+    bloomSearch2(bitMap, searchWord, m);
     
     // search for word inside of set
     searchWord = "eight";
-    bloomSearch(bitMap, searchWord, m);
+    bloomSearch2(bitMap, searchWord, m);
     
     
+    ///////////////////////////////////////////////////
+    
+    // n (elements in set)
+    elements = 50; 
+    vector<string> set2;
+    
+    createSet(set2, elements);
+    print(set2);
     
     
+    // k (number of hashes used)
+    // RSHash, JSHash, PJWHash, ELFHash, BKDRHash, SDBMHash, 
+    // DJBHash, DEKHash, FNVHash, BPHash, & APHash
+    k = 11;
+    
+    // m (size of Bloom Filter to use)
+    m = static_cast<int>( (k*elements)/.69 ); 
+
+    // bit vector (actual Bloom Filter)
+    vector<bool> bitMap2 (m);
+    
+    for(int i=0; i<set2.size(); i++)
+    {
+        bitMap2[RSHash(set2[i])%m] = true;
+        bitMap2[JSHash(set2[i])%m] = true;
+        bitMap2[PJWHash(set2[i])%m] = true;
+        bitMap2[ELFHash(set2[i])%m] = true;
+        bitMap2[BKDRHash(set2[i])%m] = true;
+        bitMap2[SDBMHash(set2[i])%m] = true;
+        bitMap2[DJBHash(set2[i])%m] = true;
+        bitMap2[DEKHash(set2[i])%m] = true;
+        bitMap2[FNVHash(set2[i])%m] = true;
+        bitMap2[BPHash(set2[i])%m] = true;
+        bitMap2[APHash(set2[i])%m] = true;    
+    }
+    
+    print(bitMap2);
     
 
+    // search for word not inside set
+    searchWord = "cardiac";
+    bloomSearch11(bitMap2, searchWord, m);
+    
+    // search for word inside of set
+    searchWord = "eight";
+    bloomSearch11(bitMap2, searchWord, m);
+    
 
-
-//    RSHash(key);
-//    JSHash(key);
-//    PJWHash(key);
-//    ELFHash(key);
-//    BKDRHash(key);
-//    SDBMHash(key);
-//    DJBHash(key);
-//    DEKHash(key);
-//    FNVHash(key);
-//    BPHash(key);
-//    APHash(key);
+    
+    
+    
 
    return 0;
 }
