@@ -3,24 +3,55 @@
 #include <iostream>
 #include "GeneralHashFunctions.h"
 #include <vector>
+#include <fstream>
 
 using namespace std;
 
-// random word generator
-void words(vector<string>& v, int elements)
+// create a file with a sentence.
+void createFile()
 {
-    char letters[26] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+    ofstream outfile;
+    outfile.open("sentence.dat");
     
-    for (int i=0; i<elements; i++ )
+    outfile << "one two three four five six seven eight nine ten eleven";
+    outfile.close();
+}
+
+// random word generator
+void createSet(vector<string>& v, int elements)
+{
+    ifstream infile;
+    string read;
+    int counter = 0;
+    
+    // write Strings from file into a vector
+    infile.open("sentence.txt");
+    while(infile >> read && counter<elements)
     {
-        string word;
-        int avgWordLength = rand()%6;
-        for(int j=0; j<=avgWordLength; j++)
+        v.push_back(read);
+        counter++;
+    }
+    
+    infile.close();
+}
+
+// bloom filter
+void bloomSearch (vector<bool>& bitMap, string searchWord, int m)
+{
+    int count = 0;
+    for(int i=0; i<bitMap.size(); i++)
+    {
+        if ( bitMap[RSHash(searchWord)%m] && bitMap[JSHash(searchWord)%m] )
         {
-            word += letters[rand()%26];
+            count++;
         }
-        
-        v.push_back(word);
+    }
+    
+    if (count > 0){
+        cout << "yes\n\n";
+    }
+    else {
+        cout << "no\n\n";
     }
 }
 
@@ -46,23 +77,26 @@ void print(const vector<bool>& v)
 
 int main(int argc, char* argv[])
 {
-    srand(time(0));
+    //createFile();
     
-    // n
-    int elements = 10; 
+    // n (elements in set)
+    int elements = 50; 
     vector<string> set;
-    words(set, elements);
+    
+    createSet(set, elements);
     print(set);
     
-    // k
+    
+    // k (number of hashes used)
+    // RSHash & JSHash
     int k = 2;
     
-    // m
+    // m (size of Bloom Filter to use)
     int m = static_cast<int>( (k*elements)/.69 ); 
 
-    // bit vector
+    // bit vector (actual Bloom Filter)
+    // k = 2
     vector<bool> bitMap (m);
-    print(bitMap);
     
     for(int i=0; i<set.size(); i++)
     {
@@ -72,28 +106,34 @@ int main(int argc, char* argv[])
     
     print(bitMap);
     
-   string key = "Then out spake brave Horatius,"
-                "\n     The Captain of the Gate:"
-                "\n     To every man upon this earth"
-                "\n     Death cometh soon or late."
-                "\n     And how can man die better"
-                "\n     Than facing fearful odds,"
-                "\n     For the ashes of his fathers,"
-                "\n     And the temples of his gods.\n";
+    string searchWord;
+    
+    // search for word not inside set
+    searchWord = "cardiac";
+    bloomSearch(bitMap, searchWord, m);
+    
+    // search for word inside of set
+    searchWord = "eight";
+    bloomSearch(bitMap, searchWord, m);
+    
+    
+    
+    
+    
 
-   cout << "General Purpose Hash Function Algorithms Test\n" << endl;
-   cout << "Key: "                          << key           << endl;
-   cout << " 1. RS-Hash Function Value:   " << RSHash(key)   << endl;
-   cout << " 2. JS-Hash Function Value:   " << JSHash(key)   << endl;
-   cout << " 3. PJW-Hash Function Value:  " << PJWHash(key)  << endl;
-   cout << " 4. ELF-Hash Function Value:  " << ELFHash(key)  << endl;
-   cout << " 5. BKDR-Hash Function Value: " << BKDRHash(key) << endl;
-   cout << " 6. SDBM-Hash Function Value: " << SDBMHash(key) << endl;
-   cout << " 7. DJB-Hash Function Value:  " << DJBHash(key)  << endl;
-   cout << " 8. DEK-Hash Function Value:  " << DEKHash(key)  << endl;
-   cout << " 9. FNV-Hash Function Value:  " << FNVHash(key)  << endl;
-   cout << "10. BP-Hash Function Value:   " << BPHash(key)   << endl;
-   cout << "11. AP-Hash Function Value:   " << APHash(key)   << endl;
+
+
+//    RSHash(key);
+//    JSHash(key);
+//    PJWHash(key);
+//    ELFHash(key);
+//    BKDRHash(key);
+//    SDBMHash(key);
+//    DJBHash(key);
+//    DEKHash(key);
+//    FNVHash(key);
+//    BPHash(key);
+//    APHash(key);
 
    return 0;
 }
