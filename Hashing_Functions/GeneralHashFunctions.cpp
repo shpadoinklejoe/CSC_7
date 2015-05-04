@@ -1,5 +1,6 @@
 
 #include "GeneralHashFunctions.h"
+#include <math.h> 
 
 using namespace std;
 
@@ -176,3 +177,17 @@ unsigned int APHash(const string& str)
    return hash;
 }
 /* End Of AP Hash Function */
+
+unsigned int joeHash(const string& s)
+{
+    int prime = 31; // smallest prime number that's big enough to spread
+    int hash = 0;
+    
+    for (int i=0; i<s.length(); i++)
+    {
+        hash += pow(prime,i)*s[i];
+    }
+    
+    return hash;
+}
+/* End Of JOE Hash Function */

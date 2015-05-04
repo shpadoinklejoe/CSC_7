@@ -29,6 +29,8 @@ int main(int argc, char* argv[])
    cout << " 9. FNV-Hash Function Value:  " << FNVHash(key)  << endl;
    cout << "10. BP-Hash Function Value:   " << BPHash(key)   << endl;
    cout << "11. AP-Hash Function Value:   " << APHash(key)   << endl;
+   cout << "12. joe-Hash Function Value:   " << joeHash(key)   << endl;
+   
 
    return 0;
 }
