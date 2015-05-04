@@ -22,6 +22,7 @@ unsigned int DEKHash (const string& str);
 unsigned int BPHash  (const string& str);
 unsigned int FNVHash (const string& str);
 unsigned int APHash  (const string& str);
+unsigned int joeHash (const string& s);
 
 
 #endif
