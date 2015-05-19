@@ -69,7 +69,7 @@ void primePrint(int n)
 int main(int argc, char** argv) {
     
     // Test if given number is prime
-    double prime = 3901;
+    double prime = 27;
     cout << "sqrt("<< prime << ") = "<< sqrt(prime) << endl;
     primeTest(prime);
     
