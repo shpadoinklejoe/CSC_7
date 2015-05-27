@@ -138,7 +138,7 @@ int main(int argc, char* argv[])
     string searchWord;
     
     // search for words NOT inside set
-    cout << "Let's search for several words we know are not in the file:\n";
+    cout << "Let's search for several words we know are NOT in the file:\n";
     searchWord = "hello";
     bloomSearch2(bitMap, searchWord, m);
     searchWord = "world";
@@ -222,7 +222,7 @@ int main(int argc, char* argv[])
     print(bitMap2);
 
     // search for words NOT inside set
-    cout << "Again, let's search for several words we know are not in the file:\n";
+    cout << "Again, let's search for several words we know are NOT in the file:\n";
     searchWord = "cardiac";
     bloomSearch11(bitMap2, searchWord, m);
     searchWord = "templeton";
