@@ -38,8 +38,8 @@ int main(int argc, char** argv) {
     
     
    //Test out the Greatest Common Denominator
-   int num=72;
-   int den=21;
+   int num=8145;
+   int den=99999;
    int gcdval=gcd(num,den);
     
    cout << num << "/"<< den << " gcd = " << gcdval << endl;

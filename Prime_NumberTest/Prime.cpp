@@ -67,6 +67,7 @@ void primePrint(int n)
 
 // Main
 int main(int argc, char** argv) {
+    srand(time(0));
     
     // Test if given number is prime
     double prime = 27;
@@ -75,11 +76,40 @@ int main(int argc, char** argv) {
     
     
     // Prints all prime numbers to a given n
-    int primeNums = 100;
+    int primeNums = 200;
     cout << "Here are the prime numbers up to "<< primeNums << ":\n";
     primePrint(primeNums);
+    
+    
+    
+    
     
 
     return 0;
 }
 
+
+
+
+
+//    //lowest number with 6 divisors
+//    int max = 201;
+//    for (int i=0; i<max; i++)
+//    {
+//        int count = 0;
+//        for( int j=1; j<=sqrt(i); j++)
+//        {
+//            if ( i%j == 0 )
+//            {
+//                cout << "Composite: " << j << " x "<< i/j << " = "<< i << endl;
+//                count ++;
+//            }
+//            
+//        }
+//    
+//        if (count>8)
+//        {
+//            cout << i << endl;
+//            break;
+//        }
+//    }
