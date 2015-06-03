@@ -181,9 +181,9 @@ unsigned int APHash(const string& str)
 unsigned int joeHash(const string& s)
 {
     int prime = 31; // smallest prime number that's big enough to spread
-    int hash = 0;
+    unsigned int hash = 0;
     
-    for (int i=0; i<s.length(); i++)
+    for (size_t i=0; i<s.length(); i++)
     {
         hash += pow(prime,i)*s[i];
     }
