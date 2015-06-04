@@ -28,6 +28,33 @@ string combine(unsigned int n0, unsigned int n1)
     return combined;
 }
 
+// combines two hash nodes to return hash node root
+unsigned int root(unsigned int H1, unsigned int H2)
+{
+    unsigned int rootHash = joeHash(combine(H1,H2));
+    return rootHash;
+}
+
+// takes in L1 - L4 and returns the Top Hash
+unsigned int topHash(unsigned int L1, unsigned int L2, unsigned int L3, unsigned int L4)
+{
+    unsigned int hashZero = root(L1,L2);
+    unsigned int hashOne = root(L3,L4);
+    unsigned int hashTop = root(hashZero,hashOne);
+    
+    return hashTop;
+}
+
+void isComplete(unsigned int a, unsigned int b)
+{
+    if (a == b)
+    {
+        cout << "FILE IS COMPLETE!\n\n";
+    }
+    else{
+        cout << "FILE INCOMPLETE...\n\n";
+    }
+}
 
 int main(int argc, char** argv) {
     
@@ -54,29 +81,18 @@ int main(int argc, char** argv) {
      ////  HEIGHT = 1  ////
     //////////////////////
     
-    // combine tree height = 0 hashes
-    // assign to new variables for tree height = 1
-    string hashZero = combine(hash00,hash01);
-    string hashOne = combine(hash10,hash11);
-    //cout << hashZero << "\n" << hashOne << endl << endl;
-    
     // hash combined strings for tree height = 1
-    unsigned int hash0 = joeHash(hashZero);
-    unsigned int hash1 = joeHash(hashOne);
+    unsigned int hash0 = root(hash00,hash01);
+    unsigned int hash1 = root(hash10,hash11);
     cout << "Hash 0: " << hash0 << "\nHash 1: " << hash1 << endl << endl;
 
       //////////////////////
      ////  TOP HEIGHT  ////
     //////////////////////
     
-    // combine tree height = 1 hashes
-    // assign to new variable for tree height = 2 (top)
-    string hashTop = combine(hash0,hash1);
-    //cout << hashTop << endl << endl;
-    
     // hash combined strings for tree height = 2 (top)
-    unsigned int topHash = joeHash(hashTop);
-    cout << "Top Hash: " << topHash << endl << endl;
+    unsigned int hashTop = root(hash0,hash1);
+    cout << "Top Hash: " << hashTop << endl << endl;
     
 
     cout << "Let's say a network of computers is seeding arbitrarily chosen yet\n"
@@ -86,20 +102,10 @@ int main(int argc, char** argv) {
     cout << "CPU-A provides verse 2: " << verse2 << endl;
     cout << "CPU-B provides verse 4: " << verse4 << endl; 
 
-    unsigned int hash0new = joeHash(combine(hash00,verse2));
-    cout << hash0new << endl;
-    unsigned int hash1new = joeHash(combine(hash01,verse4));
-    cout << hash1new << endl;
-    unsigned int topHashnew = joeHash(combine(hash0new,hash1new));
-    cout << topHashnew << endl;
+    unsigned int checkHash = topHash(hash00,verse2,hash10,verse4);
     
-    if (topHashnew == topHash)
-    {
-        cout << "FILE IS COMPLETE!\n\n";
-    }
-    else{
-        cout << "FILE INCOMPLETE...\n\n";
-    }
+    cout << "\nComputing...\n";
+    isComplete(checkHash, hashTop);
     
     
     
