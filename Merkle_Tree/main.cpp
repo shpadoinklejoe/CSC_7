@@ -95,12 +95,13 @@ int main(int argc, char** argv) {
     cout << "Top Hash: " << hashTop << endl << endl;
     
 
-    cout << "Let's say a network of computers is seeding arbitrarily chosen yet\n"
+    // TEST FOR COMPLETED FILE
+    cout << "\nLet's say a network of computers is seeding arbitrarily chosen yet\n"
             "specific verses.  We will check to see if their data + ours = the total data.\n";
     unsigned int verse2 = 3935862746;
     unsigned int verse4 = 4186718316;
-    cout << "CPU-A provides verse 2: " << verse2 << endl;
-    cout << "CPU-B provides verse 4: " << verse4 << endl; 
+    cout << "CPU-A provides Hash 0-1: " << verse2 << endl;
+    cout << "CPU-B provides Hash 1-1: " << verse4 << endl; 
 
     unsigned int checkHash = topHash(hash00,verse2,hash10,verse4);
     
@@ -108,6 +109,16 @@ int main(int argc, char** argv) {
     isComplete(checkHash, hashTop);
     
     
+    // TEST FOR INCOMPLETE FILE
+    cout << "\nNow let's say a computer claims to have the hash for verse 1 & 2"
+            " but their file is corrupt\n";
+    unsigned int corrupt0 = 509070080;
+    cout << "CPU-Z provides corrupted Hash 0: " << corrupt0 << endl;
+    
+    unsigned int corruptHash = root(corrupt0,hash1);
+    
+    cout << "\nComputing...\n";
+    isComplete(corruptHash, hashTop);
     
     
     
