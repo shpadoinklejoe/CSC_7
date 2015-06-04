@@ -6,10 +6,34 @@
 
 using namespace std;
 
-/*
- * 
- */
+// converts unsigned integers to string data type
+string convert(unsigned int n)
+{
+    string s;
+    stringstream convert;
+    convert << n;
+    convert >> s;
+    
+    return s;
+}
+
+// combines 2 hashes into 1 string
+string combine(unsigned int n0, unsigned int n1)
+{
+    string s0 = convert(n0);
+    string s1 = convert(n1);
+    
+    string combined = s0 + s1;
+    
+    return combined;
+}
+
+
 int main(int argc, char** argv) {
+    
+      //////////////////////
+     ////  HEIGHT = 0  ////
+    //////////////////////
     
     // original parsed data
     string L1 = "Then out spake brave Horatius, The Captain of the Gate:";
@@ -26,48 +50,57 @@ int main(int argc, char** argv) {
     cout << "Hash 0-0: " << hash00 << "\nHash 0-1: " << hash01 << endl;
     cout << "Hash 1-0: " << hash10 << "\nHash 1-1: " << hash11 << endl << endl;
     
-    // convert original 4 hashes to string data type
-    stringstream convert1, convert2, convert3, convert4;
-    string h00, h01, h10, h11;
-    convert1 << hash00; 
-    convert1 >> h00;  
-    convert2 << hash01;
-    convert2 >> h01;        
-    convert3 << hash10; 
-    convert3 >>h10;
-    convert4 << hash11; 
-    convert4 >> h11;
+      //////////////////////
+     ////  HEIGHT = 1  ////
+    //////////////////////
     
     // combine tree height = 0 hashes
     // assign to new variables for tree height = 1
-    string hashZero = h00 + h01;
-    string hashOne = h10 + h11;
-    //cout << hashZero << endl;
-    //cout << hashOne << endl << endl;
+    string hashZero = combine(hash00,hash01);
+    string hashOne = combine(hash10,hash11);
+    //cout << hashZero << "\n" << hashOne << endl << endl;
     
     // hash combined strings for tree height = 1
     unsigned int hash0 = joeHash(hashZero);
     unsigned int hash1 = joeHash(hashOne);
     cout << "Hash 0: " << hash0 << "\nHash 1: " << hash1 << endl << endl;
-    
-    // convert tree height = 1 hashes to string data types
-    stringstream convert5, convert6;
-    string h0, h1;
-    convert5 << hash0; 
-    convert5 >> h0;  
-    convert6 << hash1;
-    convert6 >> h1;  
+
+      //////////////////////
+     ////  TOP HEIGHT  ////
+    //////////////////////
     
     // combine tree height = 1 hashes
     // assign to new variable for tree height = 2 (top)
-    string hashTop = h0 + h1;
+    string hashTop = combine(hash0,hash1);
     //cout << hashTop << endl << endl;
     
     // hash combined strings for tree height = 2 (top)
     unsigned int topHash = joeHash(hashTop);
-    cout << "Top Hash: " << topHash << endl;
+    cout << "Top Hash: " << topHash << endl << endl;
     
 
+    cout << "Let's say a network of computers is seeding arbitrarily chosen yet\n"
+            "specific verses.  We will check to see if their data + ours = the total data.\n";
+    unsigned int verse2 = 3935862746;
+    unsigned int verse4 = 4186718316;
+    cout << "CPU-A provides verse 2: " << verse2 << endl;
+    cout << "CPU-B provides verse 4: " << verse4 << endl; 
+
+    unsigned int hash0new = joeHash(combine(hash00,verse2));
+    cout << hash0new << endl;
+    unsigned int hash1new = joeHash(combine(hash01,verse4));
+    cout << hash1new << endl;
+    unsigned int topHashnew = joeHash(combine(hash0new,hash1new));
+    cout << topHashnew << endl;
+    
+    if (topHashnew == topHash)
+    {
+        cout << "FILE IS COMPLETE!\n\n";
+    }
+    else{
+        cout << "FILE INCOMPLETE...\n\n";
+    }
+    
     
     
     
